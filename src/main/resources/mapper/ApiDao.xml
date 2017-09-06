@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="emro.dao.ApiDao">
+
+    <sql id="API_INFO">
+        id,remark,method,create_by createBy,ifnull(create_dt,'') createDt,
+        ifnull(update_dt,'') updateDt,url,request_info requestInfo,response_info responseInfo
+    </sql>
+
+    <sql id="API_CH">
+        id,name,value,is_required isRequired
+    </sql>
+
+    <select id="findApiListCount" resultType="int">
+        SELECT
+          COUNT(1)
+        FROM temp_api
+        WHERE status = 1 AND channel = #{name}
+        <if test="remark != null and remark !=''">
+            AND remark LIKE '%${remark}%'
+        </if>
+        <if test="createBy != null and createBy !=''">
+            AND create_by = #{createBy}
+        </if>
+        <if test="method != null and method !=''">
+            AND method = #{method}
+        </if>
+    </select>
+
+    <select id="findApiList" resultType="map">
+        SELECT
+          <include refid="API_INFO"/>
+        FROM temp_api
+        WHERE status = 1 AND channel = #{name}
+        <if test="remark != null and remark !=''">
+            AND remark LIKE '%${remark}%'
+        </if>
+        <if test="createBy != null and createBy !=''">
+            AND create_by = #{createBy}
+        </if>
+        <if test="method != null and method !=''">
+            AND method = #{method}
+        </if>
+        ORDER BY update_dt DESC
+        ${limit}
+    </select>
+
+    <select id="findApi" resultType="map">
+        SELECT
+        <include refid="API_INFO"/>
+        FROM temp_api
+        WHERE status = 1 AND id = #{id}
+        ${limit}
+    </select>
+
+    <select id="findApiRequestParam" resultType="map">
+        SELECT
+          <include refid="API_CH"/>
+        FROM temp_api_ch
+        WHERE status = 1 AND api_id = #{id} AND type = 1
+    </select>
+
+
+    <select id="findApiResponseParam" resultType="map">
+        SELECT
+          <include refid="API_CH"/>
+        FROM temp_api_ch
+        WHERE status = 1 AND api_id = #{id} AND type = 2
+    </select>
+
+    <update id="removeApi">
+        UPDATE
+          temp_api
+        SET
+          status = 2,
+          update_by = '${@emro.vo.SessionLogin@getLoginId()}',
+          update_dt = now()
+        WHERE id = #{id}
+    </update>
+
+    <insert id="saveApi" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO
+        temp_api
+        (remark,method,create_by,create_dt,update_by,update_dt,url,status,channel)
+        VALUES
+        (#{remark},#{method},'${@emro.vo.SessionLogin@getLoginId()}',now(),'${@emro.vo.SessionLogin@getLoginId()}',now(),#{url},1,#{channel})
+    </insert>
+
+    <insert id="saveResponseApi">
+        INSERT INTO
+          temp_api_ch
+            (api_id,name,value,is_required,type)
+          VALUES
+            (#{vo.id},#{name},#{value},0,2)
+    </insert>
+
+    <insert id="saveRequestApi">
+        INSERT INTO
+          temp_api_ch
+            (api_id,name,value,is_required,type)
+          VALUES
+            (#{vo.id},#{name},#{value},#{isRequired},1)
+    </insert>
+
+    <update id="updateApi">
+        UPDATE
+          temp_api
+        SET
+          remark = #{remark},
+          method = #{method},
+          update_by = '${@emro.vo.SessionLogin@getLoginId()}',
+          update_dt = now(),
+          url = #{url}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delApiCh">
+        UPDATE
+          temp_api_ch
+        SET
+          status = 2
+        WHERE api_id = #{id}
+    </update>
+
+</mapper>

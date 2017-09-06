@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="emro.dao.StaffDao">
+
+    <select id="findStaffList" resultType="map">
+        SELECT
+          id,username,name,ifnull(create_dt,'')createDt
+        FROM  temp_api_staff
+        ${limit}
+    </select>
+    <select id="findStaffListCount" resultType="int">
+        SELECT
+          count(1)
+        FROM  temp_api_staff
+    </select>
+    <insert id="addStaff">
+        insert INTO
+          temp_api_staff
+          (username,name,password,create_dt,create_by)
+          VALUES
+          (#{username},#{name},123,now(),'${@emro.vo.SessionLogin@getLoginId()}')
+    </insert>
+    <update id="editPswd">
+        UPDATE
+          temp_api_staff
+        SET
+          password = #{password}
+        WHERE username = '${@emro.vo.SessionLogin@getLoginId()}'
+    </update>
+
+    <select id="login" resultType="emro.po.Staff">
+        SELECT
+          username,name,password
+        FROM
+          temp_api_staff
+        WHERE
+          username = #{username} and password = #{password}
+    </select>
+
+</mapper>

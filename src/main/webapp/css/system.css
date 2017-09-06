@@ -1,0 +1,28 @@
+#system B {
+    color : red;
+}
+#system .menu_tree {
+    margin: auto;
+    text-align: center;
+}
+#system .menu_tree li {
+    list-style:none;
+    margin:auto;
+    margin-top: 20px;
+    width: 50px;
+    height: 60px;
+}
+#system .menu_tree li a {
+    color:black; /* 设置文字颜色 */
+    text-decoration:none; /* 去掉下划线 */
+    height:100%;
+}
+#system .menu_tree li a:hover {
+    opacity:0.5;
+    filter:alpha(opacity=50);
+}
+
+.select {
+    border: 1px #00bbee solid;
+    background-color: #E0ECFF;
+}
