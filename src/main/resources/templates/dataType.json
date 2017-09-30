@@ -1,0 +1,16 @@
+{
+  "int": {"type":"int","packageType" :""},
+  "tinyint" : {"type":"int","packageType" :""},
+  "smallint":{"type":"int","packageType" :""},
+  "integer":{"type":"Integer","packageType" :""},
+  "bigint" :{"type":"Long","packageType" :""},
+  "double": {"type":"double","packageType" :""},
+  "decimal": {"type":"BigDecimal","packageType" :"java.math.BigDecimal"},
+  "char": {"type":"String","packageType" :""},
+  "varchar": {"type":"String","packageType" :""},
+  "date": {"type":"Date","packageType" :"java.util.Date"},
+  "timestamp": {"type":"Date","packageType" :"java.util.Date"},
+  "datetime": {"type":"Date","packageType" :"java.util.Date"},
+  "text": {"type":"String","packageType" :""},
+  "enum": {"type":"String","packageType" :""}
+}

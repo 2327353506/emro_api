@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="emro.dao.DataDao">
+
+    <select id="getList" resultType="map">
+        select
+            table_name tableName,ifnull(table_comment,'') tableComment,ifnull(create_time,'') createTime
+        from information_schema.`TABLES`
+        where TABLE_SCHEMA ='vipmro'
+        <if test="name != null and name != ''">
+            and table_name like '%${name}%'
+        </if>
+        <if test="tableComment != null and tableComment != ''">
+            and table_comment like '%${tableComment}%'
+        </if>
+        ${limit}
+    </select>
+    <select id="getListCount" resultType="int">
+        SELECT
+            COUNT(1)
+        FROM information_schema.`TABLES`
+        WHERE TABLE_SCHEMA ='vipmro'
+        <if test="name != null and name != ''">
+            and table_name like '%${name}%'
+        </if>
+        <if test="tableComment != null and tableComment != ''">
+            and table_comment like '%${tableComment}%'
+        </if>
+    </select>
+
+    <select id="getChList" resultType="map">
+        SELECT
+            column_name columnName,data_type dataType,ifnull(column_comment,'') columnComment,column_type columnType
+        FROM information_schema.`COLUMNS`
+        WHERE table_schema ='vipmro' AND table_name = #{name}
+        ORDER BY ordinal_position ASC
+    </select>
+
+
+</mapper>

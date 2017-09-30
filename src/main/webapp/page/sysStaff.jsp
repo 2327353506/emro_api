@@ -65,8 +65,6 @@
     </table>
 </body>
 <script language="javascript">
-
-
     function staff_save(){
         if($('#sysStaff form').form('validate')){
             var username =  $.trim($("#edit_form .username").textbox("getValue"));
